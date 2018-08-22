@@ -42,13 +42,19 @@ def top_n(data,n):
 # quick n dirty main function that prints what I need
 def search_spotify(spotify,toplist):      
     notfound = 0
+    songlist = []
     for tr in toplist:
-       try:
-         results = spotify.search(q=" ".join(tr).lower(), type='track')
-         sleep(0.1) # max 10 queries per second is more than enough
-         name = results['tracks']['items'][0]['name']
-       except Exception as e:
-         print(e)
-         notfound += 1
-         print("Could not find track: " + " / ".join(tr))
+        query = " ".join(tr).lower()
+        try:
+            results = spotify.search(q=query, type='track')
+        except Exception as e:
+            print(e)
+            continue
+        sleep(0.1) # max 10 queries per second is more than enough
+        print(results['tracks']['total'], query)
+        if results['tracks']['total'] == 0:
+            notfound += 1
+            songlist.append(query)
     print("Total tracks not found: " + str(notfound))
+    for song in songlist:
+        print(song)
