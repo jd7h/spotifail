@@ -46,15 +46,27 @@ def search_spotify(spotify,toplist):
     for tr in toplist:
         query = " ".join(tr).lower()
         try:
-            results = spotify.search(q=query, type='track')
+            results = spotify.search(q=query, type='track', market="NL") #setting the market had a big influence on the quality of the results
         except Exception as e:
             print(e)
             continue
         sleep(0.1) # max 10 queries per second is more than enough
         print(results['tracks']['total'], query)
+        # if we can't find the song, try again but without the album name
+        # might lead to false positives
         if results['tracks']['total'] == 0:
-            notfound += 1
-            songlist.append(query)
+            query = (tr[0] + " " + tr[2]).lower()
+            try:
+                results = spotify.search(q=query, type='track', market="NL")
+            except Exception as e:
+                print(e)
+                continue
+            sleep(0.1) # max 10 queries per second is more than enough
+            print(results['tracks']['total'], query)
+            if results['tracks']['total'] == 0:
+                #pprint.pprint(results)
+                notfound += 1
+                songlist.append(query)
     print("Total tracks not found: " + str(notfound))
     for song in songlist:
         print(song)
