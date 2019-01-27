@@ -49,16 +49,26 @@ def main():
 
     # spotify
     # we start with the oauth dance
+    # we use the "authorization code" authorization flow (option 1)
+    # docs here: https://developer.spotify.com/documentation/general/guides/authorization-guide/
+    # good example of oauth dance implementation:  https://stackoverflow.com/questions/25711711/spotipy-authorization-code-flow
+
+    # info about scopes here: https://developer.spotify.com/documentation/general/guides/scopes/
     scope = "playlist-modify-private playlist-read-private"
-    # good example: https://stackoverflow.com/questions/25711711/spotipy-authorization-code-flow
-    sp_oath = spotipy.oauth2.SpotifyOAuth(client_id=spotify_client_id,client_secret=spotify_client_secret,redirect_uri=redirect_uri,scope=scope)
+    
+    # specify oauth object
+    sp_oauth = spotipy.oauth2.SpotifyOAuth(client_id=spotify_client_id,client_secret=spotify_client_secret,redirect_uri=redirect_uri,scope=scope)
+    # user gives permission for our scope
     print("Open this URL in your browser. Authorize the application. Spotify will then redirect you to the redirect-url you chose when you registered your application. Copy-paste the full url of that redirect (including request parameters) into the terminal.")
-    print(sp_oath.get_authorize_url())
+    print(sp_oauth.get_authorize_url())
     print("Url:")
     url = input()
-    code = sp_oath.parse_response_code(redirect_url)
-    token_info = sp_oath.get_access_token(code)
+    # user passes authorization code on to application
+    code = sp_oauth.parse_response_code(redirect_url)
+    # application passes authorization code to spotify and obtains an access token
+    token_info = sp_oauth.get_access_token(code)
     token = token_info['access_token']
+    # application authorises itself with access token and can now function with the scope
     spotify = spotipy.Spotify(token)
 
     print("You are now authorized for user",spotify.me()['name'])
