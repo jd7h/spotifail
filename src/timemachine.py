@@ -16,6 +16,7 @@ start = datetime.datetime(2011, 7, 21, 15, 10)
 end = datetime.datetime(2011, 7, 21, 15, 15)
 
 # spotify creds
+spotify_username = ""
 spotify_client_id = ""
 spotify_client_secret = ""
 redirect_url = "" # set this in spotify api key settings
@@ -58,6 +59,7 @@ def main():
     
     # specify oauth object
     sp_oauth = spotipy.oauth2.SpotifyOAuth(client_id=spotify_client_id,client_secret=spotify_client_secret,redirect_uri=redirect_uri,scope=scope)
+    sp_oath.username = spotify_username
     # user gives permission for our scope
     print("Open this URL in your browser. Authorize the application. Spotify will then redirect you to the redirect-url you chose when you registered your application. Copy-paste the full url of that redirect (including request parameters) into the terminal.")
     print(sp_oauth.get_authorize_url())
