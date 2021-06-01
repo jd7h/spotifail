@@ -4,4 +4,4 @@ idna==2.8
 pylast==3.0.0
 requests==2.21.0
 spotipy==2.4.4
-urllib3==1.24.2
+urllib3==1.26.5
